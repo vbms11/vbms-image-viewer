@@ -75,7 +75,7 @@ $.widget( "custom.imageViewer", {
     // curors
     cur_openHandClass : 'iv_cursorOpenHand',
     cur_closedHandClass : 'iv_cursorClosedHand',
-    cur_crosshair : 'iv_cursorCrosshair',
+    cur_crosshairClass : 'iv_cursorCrosshair',
     // 
     fullscreen : false,
     originalWidth : '',
@@ -98,7 +98,7 @@ $.widget( "custom.imageViewer", {
     filmStripClass : "iv_filmStrip",
     filmStripSliderClass : "iv_filmStripSlider",
     filmStripButtonClass : "iv_filmStripButton",
-    filmStripThumbContainerClass : iv_filmStripThumbContainer,
+    filmStripThumbContainerClass : "iv_filmStripThumbContainer",
     filmStripRangeFunc : null,
     filmStripImageFunc : null,
     filmStripLength : null,
@@ -317,6 +317,7 @@ $.widget( "custom.imageViewer", {
                 }).click(function(){
                     thisObject.toggelFullscreenMode();
                 }))
+                .hide()
             ).append($("<div>",{"class" : this.msg_fullscreenRestore})
                 .append($("<b>",{text : this.getTranslation('iv.restore')}))
             );
@@ -848,7 +849,7 @@ $.widget( "custom.imageViewer", {
     selectMoveMode : function () {
         
         this.mode = this.mode_move;
-        this.setCursor(this.element.find("."+this.eventClass), this.cur_openHand);
+        this.setCursor(this.element.find("."+this.eventClass), this.cur_openHandClass);
         this.setToolSelection(this.btn_moveClass);
     },
 
@@ -857,7 +858,7 @@ $.widget( "custom.imageViewer", {
         this.mouseXY = this.getMouseXY(e);
         this.selected = true;
         this.moved = false;
-        this.setCursor(this.element.find("."+this.eventClass), this.cur_closedHand);
+        this.setCursor(this.element.find("."+this.eventClass), this.cur_closedHandClass);
     },
     
     onImageMove : function (e) {
@@ -873,14 +874,14 @@ $.widget( "custom.imageViewer", {
     onImageRelease : function (e) {
         
         this.selected = false;
-        this.setCursor(this.element.find("."+this.eventClass), this.cur_openHand);
+        this.setCursor(this.element.find("."+this.eventClass), this.cur_openHandClass);
     },
     
     // mesure mode
     selectMesureMode : function () {
         
         this.mode = this.mode_draw;
-        this.setCursor(this.element.find("."+this.eventClass), this.cur_crosshair);
+        this.setCursor(this.element.find("."+this.eventClass), this.cur_crosshairClass);
         this.setToolSelection(this.btn_mesureClass);
     },
     
@@ -1116,7 +1117,7 @@ $.widget( "custom.imageViewer", {
     selectZoomMode : function () {
         
         this.mode = this.mode_zoom;
-        this.setCursor(this.element.find("."+this.eventClass), this.cur_crosshair);
+        this.setCursor(this.element.find("."+this.eventClass), this.cur_crosshairClass);
         this.setToolSelection(this.btn_zoomSelectionClass);
     },
     
@@ -1124,9 +1125,14 @@ $.widget( "custom.imageViewer", {
     onStartZoom : function (e) {
         
         var el_draw = this.element.find("."+this.drawClass);
-        var mouse = this.getMouseXY(e);
-        this.mouseXY[0] = this.selection[0] = mouse[0] - el_draw.offset().left;
-        this.mouseXY[1] = this.selection[1] = mouse[1] - el_draw.offset().top;
+        // set selection start point
+        this.selection = this.getMouseXY(e);
+        this.selection[0] = this.selection[0] - el_draw.offset().left;
+        this.selection[1] = this.selection[1] - el_draw.offset().top;
+        // set selection end point as start point
+        this.mouseXY = this.getMouseXY(e);
+        this.mouseXY[0] = this.mouseXY[0] - el_draw.offset().left;
+        this.mouseXY[1] = this.mouseXY[1] - el_draw.offset().top;
         this.selected = true;
     },
     
@@ -2135,9 +2141,9 @@ $.widget( "custom.imageViewer", {
     
     setCursor : function (object, cursorClass) {
         return object
-            .removeClass(this.cur_closedHand)
-            .removeClass(this.cur_openHand)
-            .removeClass(this.cur_crosshair)
+            .removeClass(this.cur_closedHandClass)
+            .removeClass(this.cur_openHandClass)
+            .removeClass(this.cur_crosshairClass)
             .addClass(cursorClass);
     }
     
