@@ -8,48 +8,26 @@
     height: 24px;
 }
 .iv_body {
+    /*TODO 
     overflow: hidden;
-    position: relative;
+    delete position: relative;
+    */
     z-index: 20;
+    overflow:hidden;
+    position:absolute;
 }
 .iv_fullscreenBody {
     overflow: hidden;
-}
-.iv_buttonLeft {
-    float: left;
-    margin-left: 1px;
-    margin-top: 1px;
-}
-.iv_buttonRight {
-    float: right;
-    margin-right: 1px;
-    margin-top: 1px;
-}
-.iv_buttonBg {
-    background-image: url("../images/common/imageViewer/button_bg.gif");
-    background-repeat: no-repeat;
-    height: 22px;
-    width: 22px;
-}
-.iv_buttonBgSelected {
-    background-image: url("../images/common/imageViewer/button_bg_selected.gif");
-}
-.iv_buttonDisabled {
-    cursor: default;
-    margin: 2px;
-    opacity: 0.3;
-}
-.iv_button {
-    cursor: pointer;
-    margin: 2px;
-}
-.iv_buttonSpacing {
-    margin-right: 10px;
 }
 .iv_seperator {
     float: left;
     height: 1px;
     width: 10px;
+}
+.iv_message {
+    float: left;
+    margin-top: 1px;
+    margin-left: 1px;
 }
 .iv_frame {
     position: absolute;
@@ -72,10 +50,10 @@
     z-index: 30;
 }
 .iv_eventLayer {
-    background-color: #000000;
-    opacity: 0;
     position: absolute;
     z-index: 40;
+    background-color: #000000;
+    opacity: 0;
 }
 .iv_lengthPanel {
     opacity: 0.85;
@@ -134,3 +112,116 @@
 }
 .iv_filmStripHighlight {
 }
+
+/* icons and buttons */
+.iv_buttonLeft {
+    float: left;
+    margin-left: 1px;
+    margin-top: 1px;
+}
+.iv_buttonRight {
+    float: right;
+    margin-right: 1px;
+    margin-top: 1px;
+}
+.iv_buttonBg {
+    background-image: url('img/button_bg.gif');
+    background-repeat: no-repeat;
+    height: 22px;
+    width: 22px;
+}
+.iv_buttonBgSelected {
+    background-image: url('img/button_bg_selected.gif');
+}
+.iv_button {
+    cursor: pointer;
+    margin: 2px;
+    width: 18px;
+    height: 18px;
+}
+.iv_buttonDisabled {
+    cursor: default;
+    opacity: 0.3;
+}
+.iv_buttonSpacing {
+    margin-right: 10px;
+}
+.iv_cursorOpenHand {
+    cursor: url('img/iv_openhand.cur'), default;
+}
+.iv_cursorClosedHand {
+    cursor: url('img/iv_closedhand.cur'), default;
+}
+.iv_cursorCrosshair {
+    cursor: crosshair;
+}
+iv_buttonBackgroundSelected {
+    
+}
+
+.iv_rotateLeft {
+    background: url('img/iv_rotateLeft.gif');
+}
+.iv_rotateRight {
+    background: url('img/iv_rotateRight.gif');
+}
+.iv_zoomIn {
+    background: url('img/iv_max.gif');
+}
+.iv_zoomOut {
+    background: url('img/iv_min.gif');
+}
+.iv_1-1 {
+    background: url('img/iv_1-1.gif');
+}
+.iv_expand {
+    background: url('img/iv_expand.gif');
+}
+.iv_zoomSelection {
+    background: url('img/iv_zoomSelection.gif');
+}
+.iv_move {
+    background: url('img/iv_move.gif');
+}
+.iv_mesure {
+    background: url('img/iv_mesure.gif');
+}
+.iv_clear {
+    background: url('img/iv_clear.gif');
+}
+.iv_window {
+    background: url('img/iv_window.gif');
+}
+.iv_filmstriptoggle {
+    background: url('img/iv_filmstrip.gif');
+}
+.iv_filmstripdiashow {
+    background: url('img/iv_diashow.gif');
+}
+.iv_prev {
+    background: url('img/iv_prev.gif');
+}
+.iv_next {
+    background: url('img/iv_next.gif');
+}
+.iv_fullscreen {
+    background: url('img/iv_fullscreen.gif');
+}
+.iv_fullscreenRestore {
+    background: url('img/iv_restore.gif');
+    display:none;
+}
+.iv_restoreMessage {
+    display: none;
+    float: right;
+    margin-top: 1px; 
+    margin-right: 1px; 
+    color:red;
+}
+
+
+
+
+
+
+

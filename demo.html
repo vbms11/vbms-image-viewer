@@ -7,22 +7,26 @@
     <script type="text/javascript" src="jquery/js/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="jquery/js/jquery-ui-1.10.3.custom.min.js"></script>
     
+    <script type="text/javascript" src="js/wz_jsgraphics.js"></script>
+    
     <link rel="stylesheet" href="imageViewer.css" type="text/css"  media="all" />
     <script type="text/javascript" src="imageViewer.js"></script>
+    <script type="text/javascript" src="imageViewerImpl.js"></script>
 </head>
 <body>
     
     <div id="imageViewer"></div>
     
     <script type="text/javascript">
-    /*
-    $(document).ready(function(){
-        $("#imageViewer").imageViewer({
-            'optionsLocation':'right'
-        });
+    $("#imageViewer").imageViewer({
+        'imageUrl' : 'test/Sonnenuntergang.jpg',
+        'lang' : 'en',
+        'width' : 500,
+        'height' : 500
     });
+    /*
+    initImageViewer("test/Sonnenuntergang.jpg","en","","imageViewer",500,500);
     */
-    
     </script>
     
 </body>
