@@ -74,11 +74,13 @@
     float: right;
     margin-right: 1px;
     margin-top: 27px;
+    background: url('img/iv_transpondFilmstrip.gif');
 }
 .iv_filmStripRotateButtonVertical {
     float: right;
     margin-right: 1px;
     margin-top: 11px;
+    background: url('img/iv_transpondFilmstrip.gif');
 }
 .iv_filmStripButtonImage {
     margin-left: 1px;
@@ -86,6 +88,12 @@
 .iv_filmStripButtonImageVertical {
     margin-left: 46px;
     margin-top: 1px;
+}
+.iv_filmStripButtonImageVerticalTop {
+    background: url('img/slide_up.gif');
+}
+.iv_filmStripButtonImageVerticalBottom {
+    background: url('img/slide_down.gif');
 }
 .iv_filmStripThumb {
     border-style: solid;
