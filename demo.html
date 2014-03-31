@@ -42,8 +42,8 @@
         'height' : 500,
         'originalSize' : true,
         'filmStripActive' : true,
-        'filmStripThumbs' : ['test/small/image1.jpg','test/small/image2.jpg','test/small/image3.jpg','test/small/image4.jpg'],
-        'filmStripImages' : ['test/image1.jpg','test/image2.jpg','test/image3.jpg','test/image4.jpg']
+        'filmStripThumbs' : ['test/small/image1.jpg','test/small/image2.jpg','test/small/image3.jpg','test/small/image4.jpg','test/small/image5.jpg','test/small/image6.jpg'],
+        'filmStripImages' : ['test/image1.jpg','test/image2.jpg','test/image3.jpg','test/image4.jpg','test/image5.jpg','test/image6.jpg']
     });
     </script>
     
@@ -62,8 +62,8 @@
         'enableNextPrevious' : true,
         'filmStripActive' : true,
         'filmStripVertical' : true,
-        'filmStripThumbs' : ['test/small/image1.jpg','test/small/image2.jpg','test/small/image3.jpg','test/small/image4.jpg'],
-        'filmStripImages' : ['test/image1.jpg','test/image2.jpg','test/image3.jpg','test/image4.jpg']
+        'filmStripThumbs' : ['test/small/image1.jpg','test/small/image2.jpg','test/small/image3.jpg','test/small/image4.jpg','test/small/image5.jpg','test/small/image6.jpg'],
+        'filmStripImages' : ['test/image1.jpg','test/image2.jpg','test/image3.jpg','test/image4.jpg','test/image5.jpg','test/image6.jpg']
     });
     </script>
     
@@ -73,11 +73,11 @@
     
     <script type="text/javascript">
     function getThumbsRangeCallback(startIndex,endIndex) {
-        var thumbs = ['test/small/image1.jpg','test/small/image2.jpg','test/small/image3.jpg','test/small/image4.jpg'];
+        var thumbs = ['test/small/image1.jpg','test/small/image2.jpg','test/small/image3.jpg','test/small/image4.jpg','test/small/image5.jpg','test/small/image6.jpg'];
         $("#imageViewer4").imageViewer("updateFilmStripThumbCache",thumbs);
     }
     function getImageCallback(index) {
-        var images = ['test/image1.jpg','test/image2.jpg','test/image3.jpg','test/image4.jpg'];
+        var images = ['test/image1.jpg','test/image2.jpg','test/image3.jpg','test/image4.jpg','test/image5.jpg','test/image6.jpg'];
         $("#imageViewer4").imageViewer().changeImage(images[index]);
     }
     function dummySelectionListener(index) {
