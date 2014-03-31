@@ -63,6 +63,7 @@
 .iv_filmStrip {
     position: absolute;
     z-index: 20;
+    background: white;
 }
 .iv_filmStripButton {
     float: left;
@@ -74,20 +75,34 @@
     float: right;
     margin-right: 1px;
     margin-top: 27px;
+    width: 18px;
+    height: 18px;
     background: url('img/iv_transpondFilmstrip.gif');
 }
 .iv_filmStripRotateButtonVertical {
     float: right;
     margin-right: 1px;
     margin-top: 11px;
+    width: 18px;
+    height: 18px;
     background: url('img/iv_transpondFilmstrip.gif');
 }
 .iv_filmStripButtonImage {
     margin-left: 1px;
+    width: 28px;
+    height: 74px;
+}
+.iv_filmStripButtonImageLeft {
+    background: url('img/slide_left.gif');
+}
+.iv_filmStripButtonImageRight {
+    background: url('img/slide_right.gif');
 }
 .iv_filmStripButtonImageVertical {
     margin-left: 46px;
     margin-top: 1px;
+    width: 74px;
+    height: 28px;
 }
 .iv_filmStripButtonImageVerticalTop {
     background: url('img/slide_up.gif');
@@ -104,10 +119,17 @@
     margin-top: 1px;
     width: 162px;
 }
-.iv_filmStripThumbTable {
+.iv_filmStripThumb table {
     height: 162px;
-    vertical-align: middle;
     width: 162px;
+}
+.iv_filmStripThumb td {
+    vertical-align: middle;
+    text-align: center;
+}
+.iv_filmStripThumb img {
+    max-height: 162px;
+    max-width: 162px;
 }
 .iv_filmStripSlider {
     float: left;
