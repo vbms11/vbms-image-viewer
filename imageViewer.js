@@ -349,7 +349,7 @@ $.widget( "custom.imageViewer", {
         
         // wait for image to complete loading
         if (!this.image.complete) {
-            if (this.element.find("."+this.bodyClass) !== null) {
+            if (this.element.find("."+this.bodyClass).length > 0) {
                 window.setTimeout(function(){
                     thisObject.completeAttach();
                 },100);
@@ -372,12 +372,9 @@ $.widget( "custom.imageViewer", {
             }));
         } else {
             el_frame.append($("<canvas>",{
-                "class" : this.canvasClass, 
-                "width" : this.imgWidth,
-                "height" : this.imgHeight
+                "class" : this.canvasClass
             }));
         }
-        
         // add layers for drawing and to receive events
         el_frame.append($("<div>",{
             "class" : this.drawClass
@@ -435,7 +432,7 @@ $.widget( "custom.imageViewer", {
         
         // wait for image to complete loading
         if (!this.image.complete) {
-            if (this.element.find("."+this.bodyClass) !== null) {
+            if (this.element.find("."+this.bodyClass).length > 0) {
                 var thisObject = this;
                 setTimeout(function(){
                     thisObject.completeChangeImage();
@@ -563,7 +560,7 @@ $.widget( "custom.imageViewer", {
         this.scrollLeft = Math.floor(scrollLeft);
         this.scrollTop = Math.floor(scrollTop);
         var el_frame = this.element.find("."+this.frameClass);
-        if (el_frame !== null) {
+        if (el_frame.length > 0) {
             el_frame.css({
                 "left" : -scrollLeft + "px",
                 "top" : -scrollTop + "px"
@@ -629,40 +626,44 @@ $.widget( "custom.imageViewer", {
         var el_canvas = this.element.find("."+canvasClass);
         var ctx = el_canvas.get(0).getContext("2d");
         ctx.save();
+        
+        var width = Math.floor(image.width * zoom);
+        var height = Math.floor(image.height * zoom)
+        
         switch (rotation) {
             case 0:
                 el_canvas.attr({
-                    "width" : image.width * zoom,
-                    "height" : image.height * zoom
+                    "width" : width,
+                    "height" : height
                 });
-                ctx.drawImage(image,0,0,image.width*zoom,image.height*zoom);
+                ctx.drawImage(image,0,0,width,height);
                 break;
             case 90:
                 el_canvas.attr({
-                    "width" : image.height * zoom,
-                    "height" : image.width * zoom
+                    "width" : height,
+                    "height" : width
                 });
-                ctx.translate(image.height*zoom-1,0);
+                ctx.translate(height-1,0);
                 ctx.rotate(rotation * Math.PI / 180);
-                ctx.drawImage(image,0,0,image.width*zoom,image.height*zoom);
+                ctx.drawImage(image,0,0,width,height);
                 break;
             case 180:
                 el_canvas.attr({
-                    "width" : image.width * zoom,
-                    "height" : image.height * zoom
+                    "width" : width,
+                    "height" : height
                 });
-                ctx.translate(image.width*zoom-1,image.height*zoom-1);
+                ctx.translate(width-1,height-1);
                 ctx.rotate(rotation * Math.PI / 180);
-                ctx.drawImage(image,0,0,image.width*zoom,image.height*zoom);
+                ctx.drawImage(image,0,0,width,height);
                 break;
             case 270:
                 el_canvas.attr({
-                    "width" : image.height * zoom,
-                    "height" : image.width * zoom
+                    "width" : height,
+                    "height" : width
                 });
-                ctx.translate(0,image.width*zoom-1);
+                ctx.translate(0,width-1);
                 ctx.rotate(rotation * Math.PI / 180);
-                ctx.drawImage(image,0,0,image.width*zoom,image.height*zoom);
+                ctx.drawImage(image,0,0,width,height);
                 break;
         }
     },
@@ -981,7 +982,7 @@ $.widget( "custom.imageViewer", {
         
         this.blockEvents = false;
         var el_lengthPanel = this.element.find("."+this.lengthPanelClass);
-        if (el_lengthPanel !== null) {
+        if (el_lengthPanel.length > 0) {
             el_lengthPanel.remove();
         }
     },
@@ -1081,7 +1082,7 @@ $.widget( "custom.imageViewer", {
         }
         this.element.find("."+this.drawClass).html("");
         var drawCtxId = this.element.find("."+this.drawClass).attr("id");
-        if (drawCtxId === null) {
+        if (typeof drawCtxId === "undefined") {
             drawCtxId = this.getGeneratedId("iv_"+this.drawClass+"_");
             this.element.find("."+this.drawClass).attr({"id" : drawCtxId});
         }
@@ -1096,7 +1097,7 @@ $.widget( "custom.imageViewer", {
         }
         this.element.find("."+this.markClass).html("");
         var markCtxId = this.element.find("."+this.markClass).attr("id");
-        if (markCtxId === null) {
+        if (typeof markCtxId === "undefined") {
             markCtxId = this.getGeneratedId("iv_"+this.markClass+"_");
             this.element.find("."+this.markClass).attr({"id" : markCtxId});
         }
@@ -1805,7 +1806,7 @@ $.widget( "custom.imageViewer", {
     
     diaShowNextImage : function () {
         
-        if (this.element.find("."+this.bodyClass) !== null) {
+        if (this.element.find("."+this.bodyClass).length > 0) {
             this.nextImage();
             if (this.imageIndex === this.filmStripLength - 1) {
                 this.toggleDiaShow();
@@ -1819,7 +1820,7 @@ $.widget( "custom.imageViewer", {
 
         var thisObject = this;
         this.diaShowTimer = window.setTimeout(function(){
-            if (this.element.find("."+this.baseClass) !== null) {
+            if (this.element.find("."+this.baseClass).length > 0) {
                 thisObject.diaShowNextImage();
             }
         }, this.diaShowTime);
@@ -2011,6 +2012,7 @@ $.widget( "custom.imageViewer", {
             } else if (event.originalEvent.detail) {
                 delta = event.originalEvent.detail / 3;
             }
+            delta = -delta;
             return thisObject.onMouseWheel(delta);
         });
     },
@@ -2027,7 +2029,7 @@ $.widget( "custom.imageViewer", {
         if (!this.getMouseOver() || this.blockEvents) {
             return true;
         }
-        if (this.element.find("."+this.baseClass) === null) {
+        if (this.element.find("."+this.baseClass).length === 0) {
             this.detachMouseWheelListener();
             this.detachKeyListener();
             return true;
@@ -2134,8 +2136,8 @@ $.widget( "custom.imageViewer", {
     getGeneratedId : function (prefix) {
         var id;
         do {
-            id = prefix + Math.random();
-        } while ($("#"+id) !== null)
+            id = prefix + Math.floor(Math.random()*1000000000);
+        } while ($("#"+id).length > 0)
         return id;
     },
     
