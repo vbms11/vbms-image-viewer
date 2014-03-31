@@ -1334,8 +1334,9 @@ $.widget( "custom.imageViewer", {
             //
             this.element.insertAfter($("#"+this.originalPositionPlaceholderId));
             
-            var el_cover = $("#imageViewerFullscreenCover").remove();
-            var el_fullscreen = $("#imageViewerFullscreenDiv").remove();
+            $("#imageViewerFullscreenCover").remove();
+            $("#imageViewerFullscreenDiv").remove();
+            $("body").removeClass("iv_fullscreenBody");
             
             this.resize(this.originalWidth,this.originalHeight);
             this.zoomToFit();
