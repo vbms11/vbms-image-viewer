@@ -22,7 +22,8 @@ $.widget( "custom.imageViewer", {
         enableDiaShow : null,
         enableNextPrevious : null,
         filmStripActive : null,
-        filmStripVertical : null
+        filmStripVertical : null,
+        originalSize : null
     },
     
     imageIndex : null,
@@ -76,7 +77,7 @@ $.widget( "custom.imageViewer", {
     btn_nextClass : "iv_next",
     btn_clearClass : "iv_clear",
     btn_fullscreen : "iv_fullscreen",
-    btn_fullscreenRestore : "iv_restore",
+    btn_fullscreenRestore : "iv_fullscreenRestore",
     msg_fullscreenRestore : "iv_restoreMessage",
     // defined modes
     mode_move : 1,
@@ -130,6 +131,7 @@ $.widget( "custom.imageViewer", {
     selectedToolId : null,
     //
     attachCompleteListener : null,
+    originalPositionPlaceholderId : null,
     
     // the constructor
     _create: function () {
@@ -161,18 +163,24 @@ $.widget( "custom.imageViewer", {
             if (this.options.enableNextPrevious !== null) {
                 this.initNextPrevious(this.options.enableNextPrevious);
             }
+        }
+        
+        var thisObject = this;
+        this.attachCompleteListener = function () {
             
-            var thisObject = this;
-            this.attachCompleteListener = function () {
-                
+            if (multiImages) {
                 if (thisObject.options.filmStripActive === true) {
-                    this.toggelFilmStrip();
+                    thisObject.toggelFilmStrip();
                 }
                 if (thisObject.options.filmStripVertical === true) {
-                     this.transpondFilmStrip();
+                     thisObject.transpondFilmStrip();
                 }
-            };
-        }
+            }
+            
+            if (thisObject.options.originalSize === true) {
+                thisObject.zoomReset();
+            }
+        };
         
         // attach the image viewer
         this.attach();
@@ -1269,13 +1277,20 @@ $.widget( "custom.imageViewer", {
         this.clearMarkContext();
         this.clearDrawContext();
         // detach event listeners
-        this.detachKeyListener();
-        this.detachMouseWheelListener();
+        //this.detachKeyListener();
+        //this.detachMouseWheelListener();
         //
         if (this.fullscreen) {
             this.originalWidth = this.options.width;
             this.originalHeight = this.options.height;
             var el_body = $("body").addClass("iv_fullscreenBody");
+            
+            if (this.originalPositionPlaceholderId === null) {
+                this.originalPositionPlaceholderId = this.getGeneratedId("originalPosition_");
+                $("<div>",{
+                    "id" : this.originalPositionPlaceholderId
+                }).insertBefore(this.element);
+            }
             
             // create fullscreen holder
             var el_cover = $("<iframe>",{
@@ -1300,6 +1315,7 @@ $.widget( "custom.imageViewer", {
                 "z-index" : "99",
                 "top" : "0px",
                 "left" : "0px",
+                "background" : "white",
                 "width" : $(window).width(),
                 "height" : $(window).height()
             }).appendTo(el_body);
@@ -1316,28 +1332,24 @@ $.widget( "custom.imageViewer", {
             this.element.find("."+this.msg_fullscreen).show();
         } else {
             //
-            var el_cover = $("#imageViewerFullscreenCover");
-            var el_fullscreen = $("#imageViewerFullscreenDiv");
+            this.element.insertAfter($("#"+this.originalPositionPlaceholderId));
             
-            //TODO put element back in same position
+            var el_cover = $("#imageViewerFullscreenCover").remove();
+            var el_fullscreen = $("#imageViewerFullscreenDiv").remove();
             
-            document.getElementById(this.parentId).innerHTML = el_fullscreen.innerHTML;
-			var el_body = document.getElementsByTagName("body")[0];
-			el_body.className = el_body.className.replace(/iv_fullscreenBody/g, "");
-			el_body.removeChild(el_fullscreen);
-			el_body.removeChild(el_cover);
-			this.resize(this.originalWidth,this.originalHeight);
-			this.zoomToFit();
-			// swap the button image
-			document.getElementById(this.btn_fullscreen).parentNode.style.display = "block";
-			document.getElementById(this.btn_fullscreenRestore).parentNode.style.display = "none";
-			document.getElementById(this.msg_fullscreen).style.display = "none";
-		}
-		
-		// attach event listeners
-		this.attachKeyListener();
-		this.attachMouseWheelListener();
-	},
+            this.resize(this.originalWidth,this.originalHeight);
+            this.zoomToFit();
+            
+            // swap the button image
+            this.element.find("."+this.btn_fullscreen).parent().show();
+            this.element.find("."+this.btn_fullscreenRestore).parent().hide();
+            this.element.find("."+this.msg_fullscreen).hide();
+        }
+
+        // attach event listeners
+        //this.attachKeyListener();
+        //this.attachMouseWheelListener();
+    },
         
     isFullscreen : function () {
         

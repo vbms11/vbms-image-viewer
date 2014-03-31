@@ -239,7 +239,6 @@ iv_buttonBackgroundSelected {
 }
 .iv_fullscreenRestore {
     background: url('img/iv_restore.gif');
-    display:none;
 }
 .iv_restoreMessage {
     display: none;
