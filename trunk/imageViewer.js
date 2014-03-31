@@ -11,7 +11,18 @@ $.widget( "custom.imageViewer", {
 	width : "500",
 	height : "500",
 	imageUrl : null,
-	language : 'en'
+	language : 'en',
+        filmStripThumbs : null,
+        filmStripImages : null,
+        selectionListener : null,
+        filmStripLength : null,
+        getThumbsRangeCallback : null,
+        getImageCallback : null,
+        selectionIndex : null,
+        enableDiaShow : null,
+        enableNextPrevious : null,
+        filmStripActive : null,
+        filmStripVertical : null
     },
     
     imageIndex : null,
@@ -48,9 +59,9 @@ $.widget( "custom.imageViewer", {
     eventClass : "iv_eventLayer",
     frameClass : "iv_frame",
     canvasClass : "iv_canvas",
-    headerClass : "_header",
+    headerClass : "iv_header",
     messageClass : "iv_message",
-    lengthInputClass : "_lengthInput",
+    lengthInputClass : "iv_lengthInput",
     lengthPanelClass : "iv_lengthPanel",
     bg_button : 'iv_buttonBg',
     bg_buttonSelected : 'iv_buttonBgSelected',
@@ -117,6 +128,8 @@ $.widget( "custom.imageViewer", {
     // key handeling
     ivCtrlKeyDown : false,
     selectedToolId : null,
+    //
+    attachCompleteListener : null,
     
     // the constructor
     _create: function () {
@@ -124,7 +137,46 @@ $.widget( "custom.imageViewer", {
         this.element
             .addClass("imageViewer")
             .disableSelection();
+        
+        var multiImages = false;
+        
+        // init filmstrip
+        if (this.options.filmStripThumbs !== null && this.options.filmStripImages !== null) {
+            this.initFilmStrip(this.options.filmStripThumbs,this.options.filmStripImages,this.options.selectionListener);
+            multiImages = true;
+        }
+        
+        // init film strip large
+        if (this.options.filmStripLength !== null && this.options.getThumbsRangeCallback !== null && this.options.getImageCallback !== null) {
+            this.initLargeFilmStrip(this.options.filmStripLength,this.options.getThumbsRangeCallback,this.options.getImageCallback,this.options.selectionIndex,this.options.selectionListener);
+            multiImages = true;
+        }
+        
+        // options possible with multiple images
+        if (multiImages) {
+            
+            if (this.options.enableDiaShow !== null) {
+                this.initDiaShow(this.options.enableDiaShow);
+            }
+            if (this.options.enableNextPrevious !== null) {
+                this.initNextPrevious(this.options.enableNextPrevious);
+            }
+            
+            var thisObject = this;
+            this.attachCompleteListener = function () {
+                
+                if (thisObject.options.filmStripActive === true) {
+                    this.toggelFilmStrip();
+                }
+                if (thisObject.options.filmStripVertical === true) {
+                     this.transpondFilmStrip();
+                }
+            };
+        }
+        
+        // attach the image viewer
         this.attach();
+        
         this._refresh();
     },
     
@@ -180,7 +232,7 @@ $.widget( "custom.imageViewer", {
         var thisObject = this;
         
         // insert base elements
-        var iv_header = $("<div>",{"class" : "iv_header"})
+        var iv_header = $("<div>",{"class" : this.headerClass})
             .append($("<div>",{"class" : "iv_buttonLeft iv_buttonBg"})
                 .append($("<div>",{
                     "class" : "iv_button iv_rotateLeft",
@@ -407,6 +459,10 @@ $.widget( "custom.imageViewer", {
         // set initial state
         this.zoomToFit();
         this.selectMoveMode();
+        
+        if (this.attachCompleteListener) {
+            this.attachCompleteListener();
+        }
     },
 
     changeImage : function (imageUrl) {
@@ -464,9 +520,8 @@ $.widget( "custom.imageViewer", {
         
         this.saveViewCenter();
         if (this.fullscreen) {
-            var winDim = getWindowDimensions();
-            width = winDim[0];
-            height = winDim[1];
+            width = $(window).width();
+            height = $(window).height();
         }
         this.options.width = width;
         this.options.height = height;
@@ -478,6 +533,7 @@ $.widget( "custom.imageViewer", {
             "width" : width + "px"
         });
         var el_body = this.element.find("."+this.bodyClass);
+        var headerHeight = el_header.height();
         if (this.filmStrip) {
             if (this.filmStripHorizontal) {
                 el_body.css({
@@ -628,7 +684,7 @@ $.widget( "custom.imageViewer", {
         ctx.save();
         
         var width = Math.floor(image.width * zoom);
-        var height = Math.floor(image.height * zoom)
+        var height = Math.floor(image.height * zoom);
         
         switch (rotation) {
             case 0:
@@ -1249,10 +1305,10 @@ $.widget( "custom.imageViewer", {
             }).appendTo(el_body);
             
             // add imageViewer to it
-            el_fullscreenDiv.append(this.element.remove());
+            el_fullscreenDiv.append(this.element);
             
             // display image viewer
-            this.resize(winDim[0],winDim[1]);
+            this.resize($(window).width(),$(window).height());
             this.zoomToFit();
             // swap the button image
             this.element.find("."+this.btn_fullscreen).parent().hide();
@@ -1310,6 +1366,9 @@ $.widget( "custom.imageViewer", {
         this.filmStripLength =  parseInt(length);
         this.filmStripRangeFunc = getRangeFunc;
         this.filmStripImageFunc = getImageFunc;
+        if (selection === null) {
+            selection = 0;
+        }
         this.filmStripSelectionListener = selectionListener;
         if (this.filmStripCacheSize > length) {
             this.filmStripCacheSize = length;
@@ -1392,7 +1451,7 @@ $.widget( "custom.imageViewer", {
                         "class" : "iv_filmStripButtonTop"
                 })).append(
                     $("<div>",{
-                        "class" : "iv_filmStripButtonImage"
+                        "class" : "iv_filmStripButtonImage iv_filmStripButtonImageLeft"
                     }).click(function(){
                         thisObject.moveFilmStripRight();
                     })
@@ -1407,7 +1466,7 @@ $.widget( "custom.imageViewer", {
                     })
                 ).append(
                     $("<div>",{
-                        "class" : "iv_filmStripButtonImage"
+                        "class" : "iv_filmStripButtonImage iv_filmStripButtonImageRight"
                     }).click(function(){
                         thisObject.moveFilmStripLeft();
                     })
@@ -1528,7 +1587,7 @@ $.widget( "custom.imageViewer", {
     moveFilmStripLeft : function () {
         
         var el_slider = this.element.find("."+this.filmStripSliderClass);
-        if (el_slider && (this.filmStripHorizontal ? (el_slider.width() < el_slider.firstChild.width()) : (el_slider.height() < el_slider.firstChild.height()))) {
+        if (el_slider && (this.filmStripHorizontal ? (el_slider.width() < el_slider.children().first().width()) : (el_slider.height() < el_slider.children().first().height()))) {
             this.filmStripPosition++;
             el_slider.children().first().children().first().remove();
             this.populateFilmStrip();
@@ -1569,7 +1628,7 @@ $.widget( "custom.imageViewer", {
                 }
             }
             if (this.filmStripHorizontal) {
-                el_slider.children().fist().css({
+                el_slider.children().first().css({
                     "width" : thumbsWidth + "px"
                 });
             } else {
@@ -1618,8 +1677,8 @@ $.widget( "custom.imageViewer", {
         var el_slider = this.element.find("."+this.filmStripSliderClass);
         var thisObject = this;
         $(el_slider.children().first().children()).each(function(index,object){
-            if (i + thisObject.filmStripPosition + thisObject.filmStripCacheStart === thisObject.imageIndex) {
-                object.addClass("iv_filmStripHighlight");
+            if (index + thisObject.filmStripPosition + thisObject.filmStripCacheStart === thisObject.imageIndex) {
+                $(object).addClass("iv_filmStripHighlight");
             }
         });
     },
