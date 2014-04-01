@@ -1754,22 +1754,19 @@ $.widget( "custom.imageViewer", {
                 "class" : "iv_filmStripThumb"
             }).append(
                 $("<table>",{
-                    "border" : "0",
                     "cellpadding" : "0",
-                    "cellspacing" : "0",
-                    "class" : "iv_filmStripThumbTable"
+                    "cellspacing" : "0"
                 }).append(
                     $("<tr>")
                         .append(
-                            $("<td>",{
-                                "align" : "center"
-                            }).append(
-                                $("<img>",{
-                                    "src" : this.filmStripThumbs[index]
-                                }).click(function(){
-                                    thisObject.onFilmStripThumbSelected(index);
-                                })
-                            )
+                            $("<td>")
+                                .append(
+                                    $("<img>",{
+                                        "src" : this.filmStripThumbs[index]
+                                    }).click(function(){
+                                        thisObject.onFilmStripThumbSelected(index);
+                                    })
+                                )
                         )
                 )
             );
