@@ -1301,7 +1301,7 @@ $.widget( "custom.imageViewer", {
                 "position" : "absolute",
                 "display" : "block",
                 "z-index" : "98",
-                "top" : "0px",
+                "top" : $(document).scrollTop()+"px",
                 "left" : "0px",
                 "width" : $(window).width(),
                 "height" : $(window).height()
@@ -1313,7 +1313,7 @@ $.widget( "custom.imageViewer", {
                 "position" : "absolute",
                 "display" : "block",
                 "z-index" : "99",
-                "top" : "0px",
+                "top" : $(document).scrollTop()+"px",
                 "left" : "0px",
                 "background" : "white",
                 "width" : $(window).width(),
