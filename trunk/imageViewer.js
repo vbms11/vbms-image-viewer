@@ -59,7 +59,6 @@ $.widget( "custom.imageViewer", {
     fadeClass : "_fade",
     eventClass : "iv_eventLayer",
     frameClass : "iv_frame",
-    canvasClass : "iv_canvas",
     headerClass : "iv_header",
     messageClass : "iv_message",
     lengthInputClass : "iv_lengthInput",
@@ -432,7 +431,7 @@ $.widget( "custom.imageViewer", {
             }));
         } else {
             el_frame.append($("<canvas>",{
-                "class" : this.canvasClass
+                "class" : this.imgClass
             }));
         }
         // add layers for drawing and to receive events
@@ -530,6 +529,7 @@ $.widget( "custom.imageViewer", {
         if (this.fullscreen) {
             width = $(window).width();
             height = $(window).height();
+            this.resizeFullscreen(width,height);
         }
         this.options.width = width;
         this.options.height = height;
@@ -541,7 +541,6 @@ $.widget( "custom.imageViewer", {
             "width" : width + "px"
         });
         var el_body = this.element.find("."+this.bodyClass);
-        var headerHeight = el_header.height();
         if (this.filmStrip) {
             if (this.filmStripHorizontal) {
                 el_body.css({
@@ -748,7 +747,9 @@ $.widget( "custom.imageViewer", {
             this.zoom = this.maxZoom;
         }
         this.refreshZoomButtonState();
-        this.applyZoomCenter();
+        this.applyZoom(this.imgClass,this.image,this.zoom);
+        this.loadViewCenter();
+        this.renderZoomMessage();
     },
     
     // zoom out
@@ -767,7 +768,9 @@ $.widget( "custom.imageViewer", {
             this.zoom = this.minZoom;
         }
         this.refreshZoomButtonState();
-        this.applyZoomCenter();
+        this.applyZoom(this.imgClass,this.image,this.zoom);
+        this.loadViewCenter();
+        this.renderZoomMessage();
     },
     
     // reset zoom
@@ -775,20 +778,22 @@ $.widget( "custom.imageViewer", {
         
         this.zoom = 1;
         this.setScroll(0,0);
-        this.applyZoom(this.IE?(this.imgClass):(this.canvasClass),this.image,this.zoom);
+        this.applyZoom(this.imgClass,this.image,this.zoom);
+        this.renderZoomMessage();
         this.refreshZoomButtonState();
     },
     
     // zoom image so it fits in viewer
     zoomToFit : function (targetId,image) {
         
-        if (targetId === undefined || image === undefined) {
+        if (typeof targetId === "undefined" || typeof image === "undefined") {
             this.zoom = this.getFitZoom(this.image);
-            this.applyZoom(this.IE?(this.imgClass):(this.canvasClass),this.image,this.zoom);
+            this.applyZoom(this.imgClass,this.image,this.zoom);
         } else {
             var zoom = this.getFitZoom(image);
             this.applyZoom(targetId,image,zoom);
         }
+        this.renderZoomMessage();
         this.refreshZoomButtonState();
     },
     
@@ -824,7 +829,9 @@ $.widget( "custom.imageViewer", {
             this.zoom = this.maxZoom;
         }
         this.refreshZoomButtonState();
-        this.applyZoomCenter();
+        this.applyZoom(this.imgClass,this.image,this.zoom);
+        this.loadViewCenter();
+        this.renderZoomMessage();
     },
     
     // apply zoom to a target
@@ -834,34 +841,11 @@ $.widget( "custom.imageViewer", {
         this.redrawLines();
 	if (this.IE) {
             this.element.find("."+targetClass).css({
-                "zoom" : Math.round(100*zoom) + "%"
+                "zoom" : Math.round(100 * zoom) + "%"
             });
         } else {
             this.paintCanvas(targetClass,image,zoom,this.rotation);
         }
-        this.renderZoomMessage();
-    },
-    
-    applyZoomCenter : function () {
-        
-        // clear lines now so they dont jump
-        this.clearDrawContext();
-        this.clearMarkContext();
-        //
-        if (this.IE) {
-            // resize image
-            this.element.find("."+this.imgClass).css({
-                "zoom" : Math.round(100 * this.zoom) + "%"
-            });
-        } else {
-            this.paintCanvas(this.canvasClass,this.image,this.zoom,this.rotation);
-        }
-        this.loadViewCenter();
-        // set size of layers
-        this.resizeLayers();
-        this.redrawLines();
-        // set zoom value message
-        this.renderZoomMessage();
     },
     
     // refresh the zoom message
@@ -905,9 +889,10 @@ $.widget( "custom.imageViewer", {
                 "filter" : "progid:DXImageTransform.Microsoft.BasicImage(rotation="+(this.rotation / 90)+");"
             });
         } else {
-            this.paintCanvas(this.IE?(this.imgClass):(this.canvasClass),this.image,this.zoom,this.rotation);
+            this.paintCanvas(this.imgClass,this.image,this.zoom,this.rotation);
         }
-        this.applyZoom(this.IE?(this.imgClass):(this.canvasClass),this.image,this.zoom);
+        this.applyZoom(this.imgClass,this.image,this.zoom);
+        this.renderZoomMessage();
     },
 
     // image draging
@@ -1252,7 +1237,8 @@ $.widget( "custom.imageViewer", {
             viewSize[1] = el_body.height() / this.zoom;
         }
         this.refreshZoomButtonState();
-        this.applyZoom(this.IE?(this.imgClass):(this.canvasClass),this.image,this.zoom);
+        this.applyZoom(this.imgClass,this.image,this.zoom);
+        this.renderZoomMessage();
         // put center of selection in center of view
         var center = [((end[0] - start[0]) / 2) + start[0],((end[1] - start[1]) / 2) + start[1]];
         this.setScroll((center[0] - (viewSize[0] / 2)) * this.zoom,(center[1] - (viewSize[1] / 2)) * this.zoom);
@@ -1351,7 +1337,19 @@ $.widget( "custom.imageViewer", {
         //this.attachKeyListener();
         //this.attachMouseWheelListener();
     },
+    
+    resizeFullscreen : function (width, height) {
         
+        $("#imageViewerFullscreenCover").css({
+            "width" : width,
+            "height" : height
+        });
+        $("#imageViewerFullscreenDiv").css({
+            "width" : width,
+            "height" : height
+        });
+    },
+    
     isFullscreen : function () {
         
         return this.fullscreen;
@@ -1698,7 +1696,7 @@ $.widget( "custom.imageViewer", {
     
     setCachePosition : function (selection) {
         
-        var halfCacheSize = this.filmStripCacheSize / 2;
+        var halfCacheSize = Math.ceil(this.filmStripCacheSize / 2);
         this.filmStripCacheStart = selection - halfCacheSize;
         if (this.filmStripCacheStart + this.filmStripCacheSize > this.filmStripLength) {
             this.filmStripCacheStart = this.filmStripLength - this.filmStripCacheSize;
