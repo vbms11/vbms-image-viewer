@@ -2037,14 +2037,14 @@ $.widget( "custom.imageViewer", {
                 this.ivCtrlKeyDown = true;
             }
         }
-        if (event.which === 107) { // addition
+        if (event.which === 107 || event.which === 171) { // addition
             this.zoomIn(1);
         }
-        if (event.which === 109) { // subtraction
+        if (event.which === 109 || event.which === 173) { // subtraction
             this.zoomOut(1);
         }
         if (this.fullscreen) {
-            if (event.whitch === 27) { // escape
+            if (event.which === 27) { // escape
                 this.toggelFullscreenMode();
             }
         }
@@ -2072,14 +2072,16 @@ $.widget( "custom.imageViewer", {
     attachMouseWheelListener : function () {
         
         var thisObject = this;
-        $(window).on('mousewheel DOMMouseScroll', function(event){
+        this.element.find("."+this.eventClass).on('DOMMouseScroll mousewheel', function(event){
             var delta;
             if (event.originalEvent.wheelDelta) {
                 delta = event.originalEvent.wheelDelta / 120;
+                if (window.opera) {
+                    delta = -delta;
+                }
             } else if (event.originalEvent.detail) {
-                delta = event.originalEvent.detail / 3;
+                delta = -event.originalEvent.detail / 3;
             }
-            delta = -delta;
             return thisObject.onMouseWheel(delta);
         });
     },
@@ -2087,7 +2089,7 @@ $.widget( "custom.imageViewer", {
     // detach mouse wheel event listener
     detachMouseWheelListener : function () {
         
-        $(window).off('mousewheel DOMMouseScroll');
+        this.element.find("."+this.eventClass).off('DOMMouseScroll mousewheel');
     },
     
     // handel mouse wheel event
