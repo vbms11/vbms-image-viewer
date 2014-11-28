@@ -1747,6 +1747,7 @@ $.widget( "custom.imageViewer", {
     createFilmStripThumb : function (index) {
         
         if (index > -1 && index < this.filmStripThumbs.length) {
+			if (this.filmStripThumbs[index] === null) return ""; 
             var thisObject = this;
             var el_thumb = $("<div>",{
                 "class" : "iv_filmStripThumb"
