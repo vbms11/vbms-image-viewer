@@ -1,4 +1,266 @@
 /**
+ * todo list
+ * 
+ * image filter expression parser
+ * 
+ * http://mathjs.org/docs/expressions/parsing.html
+ * http://silentmatt.com/javascript-expression-evaluator/
+ * 
+ * read exif data with exif.js and display table with values
+ * 
+ $("input").change(function() {
+    var file = this.files[0];  // file
+        fr   = new FileReader; // to read file contents
+
+    fr.onloadend = function() {
+        // get EXIF data
+        var exif = EXIF.readFromBinaryFile(new BinaryFile(this.result));
+
+        // alert a value
+        alert(exif.Make);
+    };
+
+    fr.readAsBinaryString(file); // read the file
+});
+ * 
+ * 
+ * filmstrip as jquerui module
+ * 
+ * headless mode (only show tools on mouse over)
+ * 
+ * 
+ * 
+ * 
+ */
+
+
+$.widget("custom.filmStripThumb", {
+    
+    // types: image, face, item
+    
+    // face: imageUrl, startX, startY, endX, endY
+    
+    // default options
+    options: {
+    	width : "500",
+    	height : "500",
+    	type : null,
+    	data : null,
+    	index : null,
+    	imageViewer : null,
+    	loadingUrl : null
+    },
+    
+    image : null,
+    
+    // the constructor
+    _create: function () {
+        
+        this.element
+            .addClass("iv_filmStripThumb")
+            .disableSelection();
+    
+        // attach the image viewer
+        this.attach();
+        
+        this._refresh();
+    },
+    
+    // called when created, and later when changing options
+    _refresh : function () {
+        
+        this._trigger("refreshEvent");
+    },
+
+    // revert modifications here
+    _destroy : function () {
+        
+        this.element
+            .removeClass("iv_filmStripThumb")
+            .empty()
+            .enableSelection();
+    },
+
+    // _setOptions is called with a hash of all options that are changing
+    _setOptions : function () {
+        
+        this._superApply(arguments);
+        this._refresh();
+    },
+
+    // _setOption is called for each individual option that is changing
+    _setOption : function (key, value) {
+        
+        switch (key) {
+            default:
+                this._super(key, value);
+        }
+    },
+    
+    /*
+     * Image Viewer Methods
+     */
+    
+    // init
+    attach : function () {
+        
+        var thisObject = this;
+        var el_typeImage = null;
+        
+        // prelaod image
+        switch (this.options.type) {
+            case "image":
+                this.image = new Image();
+                this.image.src = this.options.data.thumbUrl;
+                var el_typeImage = $("<img>",{
+                    "src" : this.options.loadingUrl
+                });
+                break;
+            case "face":
+                var scaleX = this.options.width / this.options.data.endX - this.options.data.startX
+                var scaleY = this.options.height / this.options.data.endY - this.options.data.startY
+                var scale = scaleX < scaleY ? scaleX : scaleY;
+                var el_typeImage = $("<img>",{
+                    "src" : this.options.loadingUrl
+                }).css({
+                    "position": "absolute", 
+                    "top": Math.floor(this.options.data.startY * scale), 
+                    "left": Math.floor(this.options.data.startX * scale), 
+                    "width": Math.floor(this.options.imageViewer.imgWidth * scale), 
+                    "height":Math.floor(this.options.imageViewer.imgHeight * scale)
+                });
+                break;
+            case "item":
+                
+                var el_typeImage = $("<img>",{
+                    "src" : this.options.data.imageUrl //TODO
+                });
+                break;
+        }
+        
+        this.element.append(
+            $("<table>",{
+                "cellpadding" : "0",
+                "cellspacing" : "0"
+            }).append(
+                $("<tr>")
+                    .append(
+                        $("<td>")
+                            .append(
+                                el_typeImage
+                            )
+                    )
+            )
+        );
+        
+        el_typeImage.click(function(){
+            thisObject.onClick();
+        });
+        
+        this.completeAttach();
+        
+    },
+    
+    completeAttach : function () {
+        
+        var thisObject = this;
+        
+        if (this.image.complete) {
+            this.element.find("img").attr({"src":this.options.thumbUrl});
+        } else {
+            window.setTimeout(function(){
+                thisObject.conpleteAttach();
+            }, 100, this);
+        }
+    },
+    
+    // events
+    
+    onMouseOver : function () {
+        
+    },
+    
+    onClick : function () {
+        
+        switch (this.options.type) {
+            
+            case "image":
+                if (this.options.imageViewer.filmStripLarge) {
+                    this.options.imageViewer.filmStripImageFunc(this.options.index+this.options.imageViewer.filmStripCacheStart);
+                } else {
+                    this.options.imageViewer.changeImage(this.options.imageViewer.filmStripImages[this.options.index]);
+                }
+                break;
+            case "face":
+            case "item":
+                this.options.imageViewer.clearInfo();
+                this.options.imageViewer.addInfo(this.options.startX, this.options.startY, this.options.endX, this.options.endY, this);
+                break;
+        }
+        
+    },
+});
+
+
+
+function getImageItems (imageUrl, onComplete) {
+    
+    var itemsInfo = []; /* = [{
+        "startX" : null, 
+        "startY" : null, 
+        "endX" : null, 
+        "endX" : null, 
+        "name" : null, 
+        "description" : null,
+        "imageUrl" : null, 
+        "itemId" : null
+    }]; */
+    
+    
+}
+
+function getFaceInfo (imageUrl, onComplete) {
+    
+    var faceInfo = []; /* = [{
+        "startX" : null, 
+        "startY" : null, 
+        "endX" : null, 
+        "endX" : null,
+        "data" : null
+    }]; */
+    
+    var urls = imageUrl instanceof Array ? imageUrl.join(",") : imageUrl;
+    var apiKey = "AW6qgJBaoB4AWnWoknu6YOfvvQlJli49RxH4MONfFKNtrBZRClWtMW";
+    var apiUser = "vbms11";
+    var serviceUrl = "https://api.keylemon.com/api/face/?user="+apiUser+"&key="+apiKey+"&urls="+urls;
+    
+    $.getJSON(serviceUrl, function(data){
+        
+        if (data.faces != undefined && data.faces.length > 0) {
+            for (var face in data.faces) {
+                faceInfo.push({
+                    "startX" : face.x, 
+                    "startY" : face.y, 
+                    "endX" : face.x + face.w, 
+                    "endY" : face.y + face.h,
+                    "data" : {
+                        "age" : face.age, 
+                        "gender" : face.gender
+                    }
+                });
+            }
+        }
+        
+        onComplete(faceInfo);
+    });
+    
+    return faceInfo;
+}
+
+
+
+
+/**
  * this software is copyright menta software gmbh.
  * you may not use or alter the code for your own purposes
  */
@@ -98,7 +360,11 @@ $.widget( "custom.imageViewer", {
     //
     center : null,
     moved : null,
+    // image analysis
+    imageFaces : null, 
+    imageItems : null, 
     // film strip
+    filmStripType : null, 
     filmStripThumbs : null,
     filmStripImages : null,
     filmStrip : false,
@@ -325,7 +591,7 @@ $.widget( "custom.imageViewer", {
                     "class" : "iv_button "+this.btn_filmstripClass,
                     "title" : this.getTranslation('iv.filmstrip')
                 }).click(function(){
-                    thisObject.toggelFilmStrip();
+                    thisObject.toggelThumbFilmStrip();
                 }))
             );
         }
@@ -357,6 +623,36 @@ $.widget( "custom.imageViewer", {
                     }).click(function(){
                         thisObject.nextImage();
                     }))
+                );
+        }
+        
+        if (this.showAnalysisButtons) {
+            iv_header
+                .append($("<div>",{"class" : "iv_buttonLeft iv_buttonBg"})
+                    .append($("<div>",{
+                        "class" : "iv_button "+this.btn_analysisClass,
+                        "title" : this.getTranslation('iv.analysis')
+                    }).mouseOver(function(){
+                        this.children()[0].fadeIn();
+                    })).mouseOut(function(){
+                        this.children()[0].fadeOut();
+                    }).append($("<div>",{})
+                        .append($("<div>",{
+                            "class" : "iv_menuItem "+this.btn_faceClass,
+                            "title" : this.getTranslation('iv.face')
+                        }).click(function(){
+                            thisObject.toggelFaceFilmStrip();
+                        }))
+                        .text(this.getTranslation('iv.face'))
+                        .end()
+                        .append($("<div>",{
+                            "class" : "iv_menuItem "+this.btn_itemClass,
+                            "title" : this.getTranslation('iv.item')
+                        }).click(function(){
+                            thisObject.toggelItemFilmStrip();
+                        }))
+                        .text(this.getTranslation('iv.item'))
+                    )
                 );
         }
         
@@ -568,6 +864,7 @@ $.widget( "custom.imageViewer", {
         var el_draw = this.element.find("."+this.drawClass);
         var el_event = this.element.find("."+this.eventClass);
         var el_frame = this.element.find("."+this.frameClass);
+        var el_info = this.element.find("."+this.infoClass);
         if (el_draw) {
             var width, height;
             if (this.rotation === 0 || this.rotation === 180) {
@@ -582,6 +879,10 @@ $.widget( "custom.imageViewer", {
                 "height" : height
             });
             el_event.css({
+                "width" : width,
+                "height" : height
+            });
+            el_info.css({
                 "width" : width,
                 "height" : height
             });
@@ -1091,10 +1392,10 @@ $.widget( "custom.imageViewer", {
         if (rotation === 90) {
             return [this.imgWidth-line[1],line[0],this.imgWidth-line[3],line[2],line[4]];
         }
-	if (rotation === 180) {
+	    if (rotation === 180) {
             return [this.imgWidth-line[0],this.imgHeight-line[1],this.imgWidth-line[2],this.imgHeight-line[3],line[4]];
         }
-	if (rotation === 270) {
+	    if (rotation === 270) {
             return [line[1],this.imgHeight-line[0],line[3],this.imgHeight-line[2],line[4]];
         }
     },
@@ -1391,6 +1692,53 @@ $.widget( "custom.imageViewer", {
         }
     },
     
+    toggelImageFilmStrip : function () {
+        
+        if (this.filmStripType == "image" && this.filmStrip) {
+            this.toggelFilmStrip();
+        } else {
+            this.filmStripType == "image";
+            if (!this.filmStrip) {
+                this.toggelFilmStrip();
+            }
+        }
+        if (this.filmStrip) {
+            if (this.filmStripLarge) {
+                this.setCachePosition(this.imageIndex); 
+                this.selectFilmStripImage(this.imageIndex - this.filmStripCacheStart);
+            } else {
+                this.selectFilmStripImage(this.imageIndex);
+            }
+            this.zoomToFit();
+            this.clearFilmStrip();
+            this.populateFilmStrip();
+        }
+    },
+    
+    toggelFaceFilmStrip : function () {
+        
+        if (this.filmStripType == "face" && this.filmStrip) {
+            this.toggelFilmStrip();
+        } else {
+            this.filmStripType == "face";
+            if (!this.filmStrip) {
+                this.toggelFilmStrip();
+            }
+        }
+        if (this.filmStrip) {
+            getFaceInfo(this.options.imageUrl, function (info) {
+                this.imageFaces = info;
+                this.zoomToFit();
+                this.clearFilmStrip();
+                this.populateFilmStrip();
+            });
+        }
+    },
+    
+    toggelItemFilmStrip : function () {
+        
+    },
+    
     toggelFilmStrip : function () {
         
         this.filmStrip = !this.filmStrip;
@@ -1541,16 +1889,6 @@ $.widget( "custom.imageViewer", {
                 .append(el_thumbSlider)
                 .append(el_rightButton)
                 .appendTo(el_base);
-            
-            if (this.filmStripLarge) {
-                this.setCachePosition(this.imageIndex); 
-                this.selectFilmStripImage(this.imageIndex - this.filmStripCacheStart);
-            } else {
-                this.selectFilmStripImage(this.imageIndex);
-            }
-
-            this.zoomToFit();
-            this.populateFilmStrip();
         }
     },
     
@@ -1746,41 +2084,47 @@ $.widget( "custom.imageViewer", {
 
     createFilmStripThumb : function (index) {
         
-        if (index > -1 && index < this.filmStripThumbs.length) {
-			if (this.filmStripThumbs[index] === null) return ""; 
-            var thisObject = this;
-            var el_thumb = $("<div>",{
-                "class" : "iv_filmStripThumb"
-            }).append(
-                $("<table>",{
-                    "cellpadding" : "0",
-                    "cellspacing" : "0"
-                }).append(
-                    $("<tr>")
-                        .append(
-                            $("<td>")
-                                .append(
-                                    $("<img>",{
-                                        "src" : this.filmStripThumbs[index]
-                                    }).click(function(){
-                                        thisObject.onFilmStripThumbSelected(index);
-                                    })
-                                )
-                        )
-                )
-            );
-            return el_thumb;
+        var thisObject = this;
+        var thumbConfig = null;
+        var el_thumb = null
+        
+        switch (this.filmStripType) {
+            case "image":
+                if (index > -1 && index < this.filmStripThumbs.length) {
+        			if (this.filmStripThumbs[index] === null)
+        			    return "";
+                    var thumbConfig = {
+                        "type" : "image",
+                        "index" : index,
+                        "data" : {
+                            "imageUrl" : this.filmStripLarge ? null : this.filmStripImages[index],
+                            "thumbUrl" : this.filmStripThumbs[index]
+                        }
+                    };
+                }
+                break;
+            case "face":
+                if (index > -1 && index < this.imageFaces.length) {
+        			if (this.imageFaces[index] === null)
+        			    return "";
+                    var thumbConfig = {
+                        "type" : "face",
+                        "index" : index,
+                        "data" : this.imageFaces[index]
+                    };
+                }
+                break;
+            case "item":
+                break;
         }
-        return null;
+        if (thumbConfig == null) {
+            var el_thumb = $("<div>").filmStripThumb(thumbConfig);
+        }
+        return el_thumb;
     },
 
     onFilmStripThumbSelected : function (index) {
-
-        if (this.filmStripLarge) {
-            this.filmStripImageFunc(index+this.filmStripCacheStart);
-        } else {
-            this.changeImage(this.filmStripImages[index]);
-        }
+        
         this.selectFilmStripImage(index);
         if (this.filmStrip) {
             this.clearFilmStrip();
@@ -1892,6 +2236,169 @@ $.widget( "custom.imageViewer", {
                 thisObject.diaShowNextImage();
             }
         }, this.diaShowTime);
+    },
+    
+    // item  marking rects
+    
+    clearInfoContext : function () {
+        
+        this.element.find("."+this.infoClass).empty();
+    },
+    
+    clearInfos : function () {
+        
+        this.clearInfoContext();
+        for (var info in this.infos) {
+            info.detach();
+        }
+        this.infos = new Array();
+    },
+    
+    addInfo : function (startX, startY, endX, endY, object) {
+        
+        this.info.push({
+            "startX" : startX, 
+            "startY" : startY, 
+            "endX" : endX, 
+            "endY" : endY,
+            "object" : object
+        });
+    },
+    
+    correctRectRotation : function (x, y, width, height, rotation) {
+        
+        if (rotation === 0 || rotation === 360) {
+            return [x,y,width,height];
+        }
+        if (rotation === 90) {
+            return [this.imgWidth-y,x,height,width];
+        }
+	    if (rotation === 180) {
+            return [this.imgWidth-x,this.imgHeight-y,width,height];
+        }
+	    if (rotation === 270) {
+            return [y,this.imgHeight-x,height,width];
+        }
+    },
+    
+    findBestPositionForInfoPanel : function (x, y, width, height, infoWidth, infoHeight) {
+        
+        var infoPanelPadding = 5;
+        var sideNames = ["right", "bottom", "left", "top"];
+        var sides = [];
+        
+        function getPreferedSide (possibleSides) {
+            for (var sideName in sideNames) {
+                for (var s in possibleSides) {
+                    if (s.name == sideName) {
+                        return side;
+                    }
+                }
+            }
+        }
+        
+        function getInfoPanelIntersections (x, y, width, height) {
+            
+            var count = 0;
+            
+            for (var info in this.infos) {
+                if (info.startX + info.width < x || info.startY + info.height < y || info.startX > x + width || info.startY > y + height) {
+                    count++;
+                    continue;
+                }
+                if ((info.startX < x && info.startX + info.width > x)
+                    || (info.startY < y && info.startY + info.height > y)
+                    || (info.startX < x + width && info.startX + info.width > x + width)
+                    || (info.startY < y + height && info.startY + info.height > y + height)) {
+                    count++;
+                    continue;
+                }
+                if (info.startX < x && info.startY < y && info.startX + info.width > x + width && info.startY + info.height > y + height) {
+                    count++;
+                    continue;
+                }
+            }
+            
+            return count;
+        }
+        
+        // check each side and count number of intersections
+        
+        for (var sideName in sideNames) {
+            sides.push({"name":sideName});
+        }
+        
+        for (var side in sides) {
+            // make posistion of info panel
+            if (side.name=="top") {
+                side.position = correctInfoPanelPosition({"x":0,"y":x-(height+infoPanelPadding)});
+            }
+            if (side.name=="right") {
+                side.position = correctInfoPanelPosition({"x":x-(width-infoPanelPadding),"y":0});
+            }
+            if (side.name=="bottom") {
+                side.position = correctInfoPanelPosition({"x":0,"y":x-(height+infoPanelPadding)});
+            }
+            if (side.name=="left") {
+                side.position = correctInfoPanelPosition({"x":x-(width-infoPanelPadding),"y":0});
+            }
+            // check if info panel in image
+            side.intersections = getInfoPanelIntersections(position.x,position.y);
+        }
+        
+        // choose side with least intersections
+        var min = [];
+        for (var side in sides) {
+            if (min.length == 0) {
+                min.push(side);
+            }
+            if (min[0].intersections > side.intersections) {
+                min.push(side);
+            }
+        }
+        var result = null;
+        // chose which side to take
+        if (min != null) {
+            result = getPreferedSide(min);
+        } else {
+            result = {
+                "position": {"x": x, "y": y}
+            };
+        }
+        
+        return result.position;
+    },
+    
+    redrawInfos : function () {
+        
+        var thisObject = this;
+        var infoLayer = this.element.find("."+this.infoClass);
+        
+        for (var i=0; i<this.infos.length; i++) {
+            var info = this.infos[i];
+            var points = this.correctInfoRotation(info.startX, info.startY, info.width, info.height);
+            $("<div>").css({
+                "class" : "iv_info", 
+                "position" : "absolute", 
+                "border" : "1px solid silver", 
+                "left" : points[0]+"px", 
+                "top" : points[1]+"px", 
+                "width" : points[2]+"px", 
+                "height" : points[3]+"px"
+            }).mouseOver(function(){
+                var position = this.findBestPositionForInfoPanel(info.startX, info.startY, info.width, info.height, this.options.infoWidth, this.options.height);
+                var position = this.correctRectRotation(position);
+                $("<div>", {
+                    "class": "iv_infoPanel", 
+                    "left" : points[0]+"px", 
+                    "top" : points[1]+"px", 
+                    "width" : points[2]+"px", 
+                    "height" : points[3]+"px"
+                }).appendTo(infoLayer);
+            }).mouseOut(function(){
+                infoLayer.find("iv_infoPanel").remove();
+            }).appendTo(infoLayer); 
+        }
     },
     
     // handel mouse over event
@@ -2275,5 +2782,3 @@ var ivTranslationTexts = {
         "iv.nextimage" : "show next image"
     }
 };
-
-
