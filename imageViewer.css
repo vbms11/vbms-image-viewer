@@ -45,6 +45,10 @@
     position: absolute;
     z-index: 30;
 }
+.iv_infoLayer {
+    position: absolute;
+    z-index: 30;
+}
 .iv_eventLayer {
     position: absolute;
     z-index: 40;
@@ -248,9 +252,16 @@ iv_buttonBackgroundSelected {
     color:red;
 }
 
+/* info */
 
-
-
-
-
-
+iv_info {
+    position: absolute;
+    border: 1px solid silver;
+}
+iv_infoPanel {
+    position: absolute;
+    border: 1px solid silver;
+    background-color: rgb(0,0,0);
+    opacity: 0.5;
+    color: white;
+}
