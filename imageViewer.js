@@ -112,15 +112,16 @@ $.widget("custom.filmStripThumb", {
             case "image":
                 this.image = new Image();
                 this.image.src = this.options.data.thumbUrl;
-                var el_typeImage = $("<img>",{
-                    "src" : this.options.loadingUrl
+                el_typeImage = $("<img>",{
+                    //"src" : this.options.loadingUrl
+                    "src" : this.options.data.thumbUrl
                 });
                 break;
             case "face":
                 var scaleX = this.options.width / this.options.data.endX - this.options.data.startX
                 var scaleY = this.options.height / this.options.data.endY - this.options.data.startY
                 var scale = scaleX < scaleY ? scaleX : scaleY;
-                var el_typeImage = $("<img>",{
+                el_typeImage = $("<img>",{
                     "src" : this.options.loadingUrl
                 }).css({
                     "position": "absolute", 
@@ -132,7 +133,7 @@ $.widget("custom.filmStripThumb", {
                 break;
             case "item":
                 
-                var el_typeImage = $("<img>",{
+                el_typeImage = $("<img>",{
                     "src" : this.options.data.imageUrl //TODO
                 });
                 break;
@@ -158,19 +159,22 @@ $.widget("custom.filmStripThumb", {
         });
         
         this.completeAttach();
-        
     },
     
     completeAttach : function () {
         
         var thisObject = this;
         
-        if (this.image.complete) {
-            this.element.find("img").attr({"src":this.options.thumbUrl});
-        } else {
-            window.setTimeout(function(){
-                thisObject.conpleteAttach();
-            }, 100, this);
+        switch (this.options.type) {
+            case "image":
+                if (this.image.complete) {
+                    //this.element.find("img").attr({"src":this.options.thumbUrl});
+                } else {
+                    window.setTimeout(function(){
+                        thisObject.completeAttach();
+                    }, 100, this);
+                }
+                break;
         }
     },
     
@@ -397,6 +401,8 @@ $.widget( "custom.imageViewer", {
     //
     attachCompleteListener : null,
     originalPositionPlaceholderId : null,
+    //
+    multiImages : null, 
     
     // the constructor
     _create: function () {
@@ -404,48 +410,6 @@ $.widget( "custom.imageViewer", {
         this.element
             .addClass("imageViewer")
             .disableSelection();
-        
-        var multiImages = false;
-        
-        // init filmstrip
-        if (this.options.filmStripThumbs !== null && this.options.filmStripImages !== null) {
-            this.initFilmStrip(this.options.filmStripThumbs,this.options.filmStripImages,this.options.selectionListener);
-            multiImages = true;
-        }
-        
-        // init film strip large
-        if (this.options.filmStripLength !== null && this.options.getThumbsRangeCallback !== null && this.options.getImageCallback !== null) {
-            this.initLargeFilmStrip(this.options.filmStripLength,this.options.getThumbsRangeCallback,this.options.getImageCallback,this.options.selectionIndex,this.options.selectionListener);
-            multiImages = true;
-        }
-        
-        // options possible with multiple images
-        if (multiImages) {
-            
-            if (this.options.enableDiaShow !== null) {
-                this.initDiaShow(this.options.enableDiaShow);
-            }
-            if (this.options.enableNextPrevious !== null) {
-                this.initNextPrevious(this.options.enableNextPrevious);
-            }
-        }
-        
-        var thisObject = this;
-        this.attachCompleteListener = function () {
-            
-            if (multiImages) {
-                if (thisObject.options.filmStripActive === true) {
-                    thisObject.toggelImageFilmStrip();
-                }
-                if (thisObject.options.filmStripVertical === true) {
-                     thisObject.transpondFilmStrip();
-                }
-            }
-            
-            if (thisObject.options.originalSize === true) {
-                thisObject.zoomReset();
-            }
-        };
         
         // attach the image viewer
         this.attach();
@@ -503,6 +467,31 @@ $.widget( "custom.imageViewer", {
     attach : function () {
         
         var thisObject = this;
+        
+        this.multiImages = false;
+        
+        // init filmstrip
+        if (this.options.filmStripThumbs !== null && this.options.filmStripImages !== null) {
+            this.initFilmStrip(this.options.filmStripThumbs,this.options.filmStripImages,this.options.selectionListener);
+            this.multiImages = true;
+        }
+        
+        // init film strip large
+        if (this.options.filmStripLength !== null && this.options.getThumbsRangeCallback !== null && this.options.getImageCallback !== null) {
+            this.initLargeFilmStrip(this.options.filmStripLength,this.options.getThumbsRangeCallback,this.options.getImageCallback,this.options.selectionIndex,this.options.selectionListener);
+            this.multiImages = true;
+        }
+        
+        // options possible with multiple images
+        if (this.multiImages) {
+            
+            if (this.options.enableDiaShow !== null) {
+                this.initDiaShow(this.options.enableDiaShow);
+            }
+            if (this.options.enableNextPrevious !== null) {
+                this.initNextPrevious(this.options.enableNextPrevious);
+            }
+        }
         
         // insert base elements
         var iv_header = $("<div>",{"class" : this.headerClass})
@@ -763,8 +752,21 @@ $.widget( "custom.imageViewer", {
         this.zoomToFit();
         this.selectMoveMode();
         
-        if (this.attachCompleteListener) {
-            this.attachCompleteListener();
+        // 
+        if (this.multiImages) {
+            if (this.options.filmStripActive === true) {
+                this.toggelImageFilmStrip();
+            }
+            if (this.options.filmStripVertical === true) {
+                 this.transpondFilmStrip();
+            }
+        }
+        if (this.options.originalSize === true) {
+            this.zoomReset();
+        }
+        
+        if (this.options.attachCompleteListener) {
+            this.options.attachCompleteListener(this);
         }
     },
 
@@ -1697,7 +1699,7 @@ $.widget( "custom.imageViewer", {
         if (this.filmStripType == "image" && this.filmStrip) {
             this.toggelFilmStrip();
         } else {
-            this.filmStripType == "image";
+            this.filmStripType = "image";
             if (!this.filmStrip) {
                 this.toggelFilmStrip();
             }
@@ -1710,8 +1712,6 @@ $.widget( "custom.imageViewer", {
                 this.selectFilmStripImage(this.imageIndex);
             }
             this.zoomToFit();
-            this.clearFilmStrip();
-            this.populateFilmStrip();
         }
     },
     
@@ -1720,7 +1720,7 @@ $.widget( "custom.imageViewer", {
         if (this.filmStripType == "face" && this.filmStrip) {
             this.toggelFilmStrip();
         } else {
-            this.filmStripType == "face";
+            this.filmStripType = "face";
             if (!this.filmStrip) {
                 this.toggelFilmStrip();
             }
@@ -1889,6 +1889,8 @@ $.widget( "custom.imageViewer", {
                 .append(el_thumbSlider)
                 .append(el_rightButton)
                 .appendTo(el_base);
+            
+            this.populateFilmStrip();
         }
     },
     
@@ -2118,6 +2120,7 @@ $.widget( "custom.imageViewer", {
                 break;
         }
         if (thumbConfig != null) {
+            thumbConfig["imageViewer"] = this;
             el_thumb = $("<div>").filmStripThumb(thumbConfig);
         }
         return el_thumb;
@@ -2232,9 +2235,7 @@ $.widget( "custom.imageViewer", {
 
         var thisObject = this;
         this.diaShowTimer = window.setTimeout(function(){
-            if (this.element.find("."+this.baseClass).length > 0) {
-                thisObject.diaShowNextImage();
-            }
+            thisObject.diaShowNextImage();
         }, this.diaShowTime);
     },
     
