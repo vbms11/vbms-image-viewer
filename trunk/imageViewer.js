@@ -2093,7 +2093,7 @@ $.widget( "custom.imageViewer", {
                 if (index > -1 && index < this.filmStripThumbs.length) {
         			if (this.filmStripThumbs[index] === null)
         			    return "";
-                    var thumbConfig = {
+                    thumbConfig = {
                         "type" : "image",
                         "index" : index,
                         "data" : {
@@ -2107,7 +2107,7 @@ $.widget( "custom.imageViewer", {
                 if (index > -1 && index < this.imageFaces.length) {
         			if (this.imageFaces[index] === null)
         			    return "";
-                    var thumbConfig = {
+                    thumbConfig = {
                         "type" : "face",
                         "index" : index,
                         "data" : this.imageFaces[index]
@@ -2117,8 +2117,8 @@ $.widget( "custom.imageViewer", {
             case "item":
                 break;
         }
-        if (thumbConfig == null) {
-            var el_thumb = $("<div>").filmStripThumb(thumbConfig);
+        if (thumbConfig != null) {
+            el_thumb = $("<div>").filmStripThumb(thumbConfig);
         }
         return el_thumb;
     },
