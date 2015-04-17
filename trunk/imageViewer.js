@@ -10,7 +10,7 @@
  * 
  $("input").change(function() {
     var file = this.files[0];  // file
-        fr   = new FileReader; // to read file contents
+    var fr   = new FileReader(); // to read file contents
 
     fr.onloadend = function() {
         // get EXIF data
@@ -28,7 +28,7 @@
  * 
  * headless mode (only show tools on mouse over)
  * 
- * 
+ * $.getScript();
  * 
  * 
  */
@@ -435,7 +435,7 @@ $.widget( "custom.imageViewer", {
             
             if (multiImages) {
                 if (thisObject.options.filmStripActive === true) {
-                    thisObject.toggelFilmStrip();
+                    thisObject.toggelImageFilmStrip();
                 }
                 if (thisObject.options.filmStripVertical === true) {
                      thisObject.transpondFilmStrip();
@@ -591,7 +591,7 @@ $.widget( "custom.imageViewer", {
                     "class" : "iv_button "+this.btn_filmstripClass,
                     "title" : this.getTranslation('iv.filmstrip')
                 }).click(function(){
-                    thisObject.toggelThumbFilmStrip();
+                    thisObject.toggelImageFilmStrip();
                 }))
             );
         }
