@@ -6,8 +6,15 @@
     <link type="text/css" href="jquery/css/base/jquery.ui.all.css" media="all" rel="stylesheet"/>
     <script type="text/javascript" src="jquery/js/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="jquery/js/jquery-ui-1.10.3.custom.min.js"></script>
+
+    <script src="js/binaryAjax.js"></script>
+    <script src="js/exif.js"></script>
+    
+    <script src="js/jquery.facedetection.js"></script>
     
     <script type="text/javascript" src="js/wz_jsgraphics.js"></script>
+    <script type="text/javascript" src="js/expressionParser.js"></script>
+    <script type="text/javascript" src="js/jCanvasGraph/jCanvasGraph.js"></script>
     
     <link rel="stylesheet" href="imageViewer.css" type="text/css"  media="all" />
     <script type="text/javascript" src="imageViewer.js"></script>
@@ -94,6 +101,86 @@
         'filmStripLength' : 4,
         'getThumbsRangeCallback' : getThumbsRangeCallback,
         'getImageCallback' : getImageCallback
+    });
+    </script>
+    
+    <h3>Image analysis</h3>
+    <p>This shows the image analysis feature of the image viewer</p>
+    <div id="imageViewer5"></div>
+    
+    <script type="text/javascript">
+    $("#imageViewer5").imageViewer({
+        'imageUrl' : 'test/faces.jpg',
+        'lang' : 'en',
+        'width' : 700,
+        'height' : 500,
+        'enableFaceInfo' : true, 
+        'filmStripActive' : true, 
+        'filmStripType' : 'face'
+    });
+    </script>
+    
+    <h3>Exif data</h3>
+    <p>This shows the exif data feature of the image viewer</p>
+    <div id="imageViewer6"></div>
+    
+    <script type="text/javascript">
+    $("#imageViewer6").imageViewer({
+        'imageUrl' : 'test/exif.jpg',
+        'lang' : 'en',
+        'width' : 700,
+        'height' : 500,
+        'enableExif' : true 
+    });
+    </script>
+    
+    <h3>Image Filter</h3>
+    <p>This shows the image filter feature of the image viewer</p>
+    <div id="imageViewer7"></div>
+    
+    <script type="text/javascript">
+    $("#imageViewer7").imageViewer({
+        'imageUrl' : 'test/image4.jpg',
+        'lang' : 'en',
+        'width' : 700,
+        'height' : 500,
+        'enableImageFilter' : true 
+    });
+    </script>
+    
+    <h3>Image Items</h3>
+    <p>This shows the image items feature of the image viewer. Information is displayed about items found in the image.</p>
+    <div id="imageViewer8"></div>
+    
+    <h3>Button Placement, Alignment</h3>
+    <p>This shows the options for placement and alignment of buttons.</p>
+    <div id="imageViewer9"></div>
+    
+    <h3>Button Visibility</h3>
+    <p>This shows the Button Visibility feature of the image viewer. Buttons are only visible if the mouse is over the image. Various effects can be used. (slide, fade, drop, flash)</p>
+    <p>Effect: 
+        <select name='effect10'>
+            <option value='none'>(None)</option>
+            <option value='fade'>Fade</option>
+            <option value='slide'>Slide</option>
+            <option value='fade'>Blind</option>
+        <select>
+    </p>
+    
+    <div id="imageViewer10"></div>
+    
+    <script type="text/javascript">
+    var imageViewer10 = $("#imageViewer10").imageViewer({
+        'imageUrl' : 'test/image4.jpg',
+        'lang' : 'en',
+        'width' : 700,
+        'height' : 500,
+        'hideButtons' : true,
+        'hideButtonsEffect' : 'fade'
+    });
+    $("#effect10").change(function(e){
+        var effect = e.item.val();
+        imageViewer10.setOption('hideButtonsEffect', effect);
     });
     </script>
     

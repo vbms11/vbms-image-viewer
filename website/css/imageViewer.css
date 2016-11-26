@@ -1,0 +1,438 @@
+.iv_base {
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 8pt;
+    font-weight: normal;
+    position: relative;
+}
+.iv_header {
+    height: 24px;
+    z-index: 30;
+}
+.iv_body {
+    /*TODO 
+    overflow: hidden;
+    delete position: relative;
+    */
+    z-index: 20;
+    overflow:hidden;
+    position:absolute;
+}
+.iv_fullscreenBody {
+    overflow: hidden;
+}
+.iv_seperator {
+    float: left;
+    height: 1px;
+    width: 10px;
+}
+.iv_message {
+    float: left;
+    margin-top: 4px;
+    margin-left: 0px;
+}
+.iv_frame {
+    position: absolute;
+    z-index: 10;
+}
+.iv_image {
+    position: absolute;
+    z-index: 10;
+}
+.iv_drawLayer {
+    position: absolute;
+    z-index: 20;
+}
+.iv_markLayer {
+    position: absolute;
+    z-index: 30;
+}
+.iv_interactionLayer {
+    position: absolute;
+    z-index: 35;
+}
+.iv_eventLayer {
+    position: absolute;
+    z-index: 40;
+    background-color: black;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    -moz-opacity: 0;
+    -khtml-opacity: 0;
+}
+.iv_lengthPanel {
+    opacity: 0.85;
+    position: absolute;
+    z-index: 50;
+}
+.iv_filmStrip {
+    position: absolute;
+    z-index: 20;
+    background: white;
+}
+.iv_filmStripButton {
+    float: left;
+}
+.iv_filmStripButtonTop {
+    height: 46px;
+}
+.iv_filmStripRotateButtonHorizontal {
+    float: right;
+    margin-right: 1px;
+    margin-top: 27px;
+    width: 18px;
+    height: 18px;
+    background: url('../img/iv_transpondFilmstrip.gif');
+}
+.iv_filmStripRotateButtonVertical {
+    float: right;
+    margin-right: 1px;
+    margin-top: 11px;
+    width: 18px;
+    height: 18px;
+    background: url('../img/iv_transpondFilmstrip.gif');
+}
+.iv_filmStripButtonImage {
+    margin-left: 1px;
+    width: 28px;
+    height: 74px;
+}
+.iv_filmStripButtonImageLeft {
+    background: url('../img/slide_left.gif');
+}
+.iv_filmStripButtonImageRight {
+    background: url('../img/slide_right.gif');
+}
+.iv_filmStripButtonImageVertical {
+    margin-left: 46px;
+    margin-top: 1px;
+    width: 74px;
+    height: 28px;
+}
+.iv_filmStripButtonImageVerticalTop {
+    background: url('../img/slide_up.gif');
+}
+.iv_filmStripButtonImageVerticalBottom {
+    background: url('../img/slide_down.gif');
+}
+.iv_filmStripThumb {
+    border-style: solid;
+    border-width: 1px;
+    float: left;
+    height: 162px;
+    margin-right: 1px;
+    margin-top: 1px;
+    width: 162px;
+    position: relative;
+    overflow: hidden;
+}
+.iv_filmStripThumb table {
+    height: 162px;
+    width: 162px;
+    border: 0px none;
+}
+.iv_filmStripThumb td {
+    vertical-align: middle;
+    text-align: center;
+}
+.iv_filmStripThumb img {
+    max-height: 162px;
+    max-width: 162px;
+}
+.iv_filmStripSlider {
+    float: left;
+    margin-left: 1px;
+    margin-right: 1px;
+    overflow: hidden;
+    position: relative;
+}
+.iv_filmStripThumbContainer {
+}
+.iv_filmStripHighlight {
+}
+
+/* icons and buttons */
+.iv_buttonLeft {
+    float: left;
+    margin-left: 1px;
+    margin-top: 1px;
+}
+.iv_buttonRight {
+    float: right;
+    margin-right: 1px;
+    margin-top: 1px;
+}
+.iv_buttonBg {
+    background-image: url('../img/button_bg.gif');
+    background-repeat: no-repeat;
+    height: 22px;
+    width: 22px;
+}
+.iv_buttonBg * {
+    background-repeat: no-repeat;
+}
+.iv_buttonBgSelected {
+    background-image: url('../img/button_bg_selected.gif');
+}
+.iv_button {
+    cursor: pointer;
+    margin: 2px;
+    width: 18px;
+    height: 18px;
+    position: relative;
+}
+.iv_buttonDisabled {
+    cursor: default;
+    opacity: 0.3;
+}
+.iv_buttonSpacing {
+    margin-right: 10px;
+}
+.iv_cursorOpenHand {
+    cursor: url('../img/iv_openhand.cur'), default;
+}
+.iv_cursorClosedHand {
+    cursor: url('../img/iv_closedhand.cur'), default;
+}
+.iv_cursorCrosshair {
+    cursor: crosshair;
+}
+iv_buttonBackgroundSelected {
+    
+}
+
+.iv_rotateLeft {
+    background: url('../img/iv_rotateLeft.gif');
+}
+.iv_rotateRight {
+    background: url('../img/iv_rotateRight.gif');
+}
+.iv_zoomIn {
+    background: url('../img/iv_max.gif');
+}
+.iv_zoomOut {
+    background: url('../img/iv_min.gif');
+}
+.iv_1-1 {
+    background: url('../img/iv_1-1.gif');
+}
+.iv_expand {
+    background: url('../img/iv_expand.gif');
+}
+.iv_zoomSelection {
+    background: url('../img/iv_zoomSelection.gif');
+}
+.iv_move {
+    background: url('../img/iv_move.gif');
+}
+.iv_mesure {
+    background: url('../img/iv_mesure.gif');
+}
+.iv_clear {
+    background: url('../img/iv_clear.gif');
+}
+.iv_window {
+    background: url('../img/iv_window.gif');
+}
+.iv_filmstriptoggle {
+    background: url('../img/iv_filmstrip.gif');
+}
+.iv_filmstripdiashow {
+    background: url('../img/iv_diashow.gif');
+}
+.iv_prev {
+    background: url('../img/iv_prev.gif');
+}
+.iv_next {
+    background: url('../img/iv_next.gif');
+}
+.iv_analysis {
+    background: url('../img/iv_analysis.gif');
+}
+.iv_face {
+    background: url('../img/iv_face.gif');
+}
+.iv_item {
+    background: url('../img/iv_item.gif');
+}
+.iv_fullscreen {
+    background: url('../img/iv_fullscreen.gif');
+}
+.iv_fullscreenRestore {
+    background: url('../img/iv_restore.gif');
+}
+.iv_restoreMessage {
+    display: none;
+    float: right;
+    margin-top: 1px; 
+    margin-right: 1px; 
+    color:red;
+}
+
+/* info */
+
+.iv_info {
+    position: absolute;
+    border: 1px solid green;
+    z-index: 50;
+}
+.iv_infoPanel {
+    position: absolute;
+    border: 1px solid silver;
+    background-color: rgb(0,0,0);
+    opacity: 0.5;
+    color: white;
+}
+
+/* drop down menu */
+
+.iv_menu {
+    position: absolute;
+    width: auto;
+    height: auto;
+    min-width: 50px;
+    left: 0px;
+    background-color: white;
+    z-index: 40;
+    display: none;
+}
+.iv_menuItem {
+    padding-left: 25px;
+    background-position: 0px 0px;
+    min-height: 20px;
+    background-repeat: no-repeat;
+}
+.iv_menuItemHighlight {
+    background-color: rgb(220,220,220);
+}
+
+/* exif */
+
+.iv_scrollPanel {
+    position: absolute;
+    width: 250px;
+    height: auto;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 50;
+    top: 0px;
+}
+.iv_scrollPanelRight {
+    right: 0px;
+}
+
+.iv_exifPanel {
+    opacity: 0.9;
+    background-color: black;
+    color: white;
+    position: relative;
+}
+.iv_exifPanel div {
+    padding: 10px;
+}
+.iv_exifPanel table {
+    width: 100%;
+}
+.iv_exifPanel td {
+    width: 99%;
+}
+.iv_exifPanel td:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* image filter */
+
+.iv_filter_vars {
+}
+.iv_filter_vars fieldset div {
+    display: table;
+    width: 100%;
+}
+.iv_filter_vars fieldset div div {
+    display: table-row;
+}
+.iv_filter_vars fieldset div div div {
+    display: table-cell;
+    width: 100%;
+}
+.iv_filter_vars fieldset div div:first-child {
+    width: 1%;
+}
+.iv_filter_vars fieldset input {
+    width: 100%;
+}
+.iv_imageFilterPanel {
+    background-color: none;
+}
+.iv_filter_select div {
+    display: table;
+    width: 100%;
+}
+.iv_filter_select div > div {
+    display: table-row;
+    padding-top: 3px;
+}
+.iv_filter_select div div:first-child {
+    display: table-row;
+    padding-top: 0px;
+}
+.iv_filter_select div > div div:first-child {
+    display: block;
+    width:1%;
+    padding-right: 5px;
+}
+.iv_filter_select div > div > div {
+    display: table-cell;
+}
+.iv_filter_select select {
+    width:100%;
+}
+
+/*  */
+.iv_filter_exp div {
+    display: table;
+    width: 100%;
+}
+.iv_filter_exp div > div {
+    display: table-row;
+    padding-top: 3px;
+}
+.iv_filter_exp div div:first-child {
+    padding-top: 0px;
+}
+.iv_filter_exp div > div > div {
+    display: table-cell;
+}
+.iv_filter_exp div > div div:first-child {
+    width: 1%;
+    padding-right: 5px;
+    vertical-align: top;
+}
+.iv_filter_exp textarea {
+    resize: none;
+    width: 100%;
+}
+
+/*  */
+.iv_filter_exp div {
+    display: table;
+    width: 100%;
+}
+.iv_filter_exp div > div {
+    display: table-row;
+    padding-top: 3px;
+}
+.iv_filter_exp div div:first-child {
+    padding-top: 0px;
+}
+.iv_filter_exp div > div > div {
+    display: table-cell;
+}
+.iv_filter_exp div > div div:first-child {
+    width: 1%;
+    padding-right: 5px;
+    vertical-align: top;
+}
+.iv_filter_exp input {
+}

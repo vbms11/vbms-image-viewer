@@ -1,0 +1,7 @@
+
+This is the license file, place it in the same folder as the imageViewer.js file.
+Only the following lines are required.
+
+owner: <ownerName>
+
+license: <licenseKey> 

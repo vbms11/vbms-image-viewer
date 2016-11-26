@@ -6,6 +6,7 @@
 }
 .iv_header {
     height: 24px;
+    z-index: 30;
 }
 .iv_body {
     /*TODO 
@@ -45,9 +46,9 @@
     position: absolute;
     z-index: 30;
 }
-.iv_infoLayer {
+.iv_interactionLayer {
     position: absolute;
-    z-index: 30;
+    z-index: 35;
 }
 .iv_eventLayer {
     position: absolute;
@@ -121,6 +122,8 @@
     margin-right: 1px;
     margin-top: 1px;
     width: 162px;
+    position: relative;
+    overflow: hidden;
 }
 .iv_filmStripThumb table {
     height: 162px;
@@ -164,6 +167,9 @@
     height: 22px;
     width: 22px;
 }
+.iv_buttonBg * {
+    background-repeat: no-repeat;
+}
 .iv_buttonBgSelected {
     background-image: url('img/button_bg_selected.gif');
 }
@@ -172,6 +178,7 @@
     margin: 2px;
     width: 18px;
     height: 18px;
+    position: relative;
 }
 .iv_buttonDisabled {
     cursor: default;
@@ -238,6 +245,15 @@ iv_buttonBackgroundSelected {
 .iv_next {
     background: url('img/iv_next.gif');
 }
+.iv_analysis {
+    background: url('img/iv_analysis.gif');
+}
+.iv_face {
+    background: url('img/iv_face.gif');
+}
+.iv_item {
+    background: url('img/iv_item.gif');
+}
 .iv_fullscreen {
     background: url('img/iv_fullscreen.gif');
 }
@@ -254,14 +270,169 @@ iv_buttonBackgroundSelected {
 
 /* info */
 
-iv_info {
+.iv_info {
     position: absolute;
-    border: 1px solid silver;
+    border: 1px solid green;
+    z-index: 50;
 }
-iv_infoPanel {
+.iv_infoPanel {
     position: absolute;
     border: 1px solid silver;
     background-color: rgb(0,0,0);
     opacity: 0.5;
     color: white;
+}
+
+/* drop down menu */
+
+.iv_menu {
+    position: absolute;
+    width: auto;
+    height: auto;
+    min-width: 50px;
+    left: 0px;
+    background-color: white;
+    z-index: 40;
+    display: none;
+}
+.iv_menuItem {
+    padding-left: 25px;
+    background-position: 0px 0px;
+    min-height: 20px;
+    background-repeat: no-repeat;
+}
+.iv_menuItemHighlight {
+    background-color: rgb(220,220,220);
+}
+
+/* exif */
+
+.iv_scrollPanel {
+    position: absolute;
+    width: 250px;
+    height: auto;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 50;
+    top: 0px;
+}
+.iv_scrollPanelRight {
+    right: 0px;
+}
+
+.iv_exifPanel {
+    opacity: 0.9;
+    background-color: black;
+    color: white;
+    position: relative;
+}
+.iv_exifPanel div {
+    padding: 10px;
+}
+.iv_exifPanel table {
+    width: 100%;
+}
+.iv_exifPanel td {
+    width: 99%;
+}
+.iv_exifPanel td:first-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* image filter */
+
+.iv_filter_vars {
+}
+.iv_filter_vars fieldset div {
+    display: table;
+    width: 100%;
+}
+.iv_filter_vars fieldset div div {
+    display: table-row;
+}
+.iv_filter_vars fieldset div div div {
+    display: table-cell;
+    width: 100%;
+}
+.iv_filter_vars fieldset div div:first-child {
+    width: 1%;
+}
+.iv_filter_vars fieldset input {
+    width: 100%;
+}
+.iv_imageFilterPanel {
+    background-color: none;
+}
+.iv_filter_select div {
+    display: table;
+    width: 100%;
+}
+.iv_filter_select div > div {
+    display: table-row;
+    padding-top: 3px;
+}
+.iv_filter_select div div:first-child {
+    display: table-row;
+    padding-top: 0px;
+}
+.iv_filter_select div > div div:first-child {
+    display: block;
+    width:1%;
+    padding-right: 5px;
+}
+.iv_filter_select div > div > div {
+    display: table-cell;
+}
+.iv_filter_select select {
+    width:100%;
+}
+
+/*  */
+.iv_filter_exp div {
+    display: table;
+    width: 100%;
+}
+.iv_filter_exp div > div {
+    display: table-row;
+    padding-top: 3px;
+}
+.iv_filter_exp div div:first-child {
+    padding-top: 0px;
+}
+.iv_filter_exp div > div > div {
+    display: table-cell;
+}
+.iv_filter_exp div > div div:first-child {
+    width: 1%;
+    padding-right: 5px;
+    vertical-align: top;
+}
+.iv_filter_exp textarea {
+    resize: none;
+    width: 100%;
+}
+
+/*  */
+.iv_filter_exp div {
+    display: table;
+    width: 100%;
+}
+.iv_filter_exp div > div {
+    display: table-row;
+    padding-top: 3px;
+}
+.iv_filter_exp div div:first-child {
+    padding-top: 0px;
+}
+.iv_filter_exp div > div > div {
+    display: table-cell;
+}
+.iv_filter_exp div > div div:first-child {
+    width: 1%;
+    padding-right: 5px;
+    vertical-align: top;
+}
+.iv_filter_exp input {
 }
